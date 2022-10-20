@@ -1,0 +1,54 @@
+;-------------------------------------------------------------------------------
+; MSP430 Assembler Code Template for use with TI Code Composer Studio
+;
+;
+;-------------------------------------------------------------------------------
+            .cdecls C,LIST,"msp430.h"       ; Include device header file
+            
+;-------------------------------------------------------------------------------
+            .def    RESET                   ; Export program entry-point to
+                                            ; make it known to linker.
+;-------------------------------------------------------------------------------
+            .text                           ; Assemble into program memory.
+            .retain                         ; Override ELF conditional linking
+                                            ; and retain current section.
+            .retainrefs                     ; And retain any sections that have
+                                            ; references to current section.
+
+;-------------------------------------------------------------------------------
+RESET       mov.w   #__STACK_END,SP         ; Initialize stackpointer
+StopWDT     mov.w   #WDTPW|WDTHOLD,&WDTCTL  ; Stop watchdog timer
+
+
+;-------------------------------------------------------------------------------
+; Main loop here
+;-------------------------------------------------------------------------------
+		    mov.w   #0006h,&2000h;
+            mov.w   #0009h,&2002h;  this move the hex value 9 to memory location 2 in hex
+            clr.w   &2006h;  this clears the values stored in mem location 6h
+            clr.w   &2008h; this clears the values stored in mem location 8h
+            mov.w   &2002h,&2004h; moving value in mem location 2 to location 4
+            add.w   &2000h,&2004h; adding values in mem location 0 and 4
+            cmp.w   #000Ah,&2004h; comparing to see if me location has the same value as the number
+            jhs Greater ; if greater it goes to label
+            jlo Less    ; if less than it goes to label
+Greater:
+            mov.w   &2000h,&2008h; moves value in mem location 0 to 8
+            jmp $;
+Less:
+            mov.w   &2002h,&2006h; moves value in mem location 2 to 6
+            jmp $;
+                                            
+
+;-------------------------------------------------------------------------------
+; Stack Pointer definition
+;-------------------------------------------------------------------------------
+            .global __STACK_END
+            .sect   .stack
+            
+;-------------------------------------------------------------------------------
+; Interrupt Vectors
+;-------------------------------------------------------------------------------
+            .sect   ".reset"                ; MSP430 RESET Vector
+            .short  RESET
+            
