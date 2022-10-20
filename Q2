@@ -1,0 +1,31 @@
+#include <msp430.h>
+
+/**
+ * main.c
+ */
+int sum(int s1, int s2); //function declaration
+
+int main(void)
+{
+    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+
+    
+    int a = 0b0111000010010101;//28821
+    int b = 0b0110110000001111;//27663
+
+    int c = sum(a,b); //function
+
+    while(1);
+
+
+    return 0;
+}
+
+//function 
+int sum(int s1, int s2){
+   //adds the two integers and stores the value in variable d
+   int d = s1+s2;
+   return d; //returns value back to main
+}
+
+
